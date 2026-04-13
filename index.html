@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Data Visualization Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/gridstack@7.2.1/dist/gridstack.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    
+    <!-- Background overlay -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-3"></div>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar glass-panel">
+            <div class="logo">
+                <i class="fa-solid fa-chart-pie"></i>
+                <h2>AI DataViz</h2>
+            </div>
+            
+            <div class="user-info">
+                <div class="avatar"><i class="fa-solid fa-user"></i></div>
+                <span>{{ username }}</span>
+                <a href="{{ url_for('logout') }}" title="Logout" style="margin-left: auto; color: var(--danger);"><i class="fa-solid fa-power-off"></i></a>
+            </div>
+
+            <ul class="nav-links" style="margin-top: 1rem;">
+                <li class="active"><a href="#" id="nav-dashboard"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                <li><a href="#" id="download-csv-btn"><i class="fa-solid fa-file-csv"></i> Download Cleaned CSV</a></li>
+                <li><a href="#" id="download-report-btn"><i class="fa-solid fa-file-pdf"></i> Download Report</a></li>
+            </ul>
+
+            <div class="history-list">
+                <h4 style="margin: 1.5rem 0 0.5rem; font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted);">Upload History</h4>
+                <div id="history-items" class="history-scrollable">
+                    <!-- History injected via JS -->
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content" id="report-content">
+            <!-- Header section -->
+            <header class="header glass-panel" id="header-area">
+                <div class="header-tools">
+                   <button id="upload-new-btn" class="btn-primary" style="display:none;"><i class="fa-solid fa-plus"></i> Upload New</button>
+                </div>
+                
+                <div class="upload-area" id="drop-zone">
+                    <input type="file" id="file-input" accept=".csv, .json" hidden>
+                    <div class="upload-content">
+                        <i class="fa-solid fa-cloud-arrow-up cloud-icon"></i>
+                        <span>Drag & drop CSV or JSON, or <span class="highlight">browse</span></span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Loading overlay -->
+            <div id="loading" class="loading-overlay hidden">
+                <div class="spinner"></div>
+                <p>AI is processing your data robustly...</p>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-grid hidden" id="dashboard-content">
+                
+                <!-- AI Summary Panel -->
+                <div class="panel glass-panel summary-panel">
+                    <h3><i class="fa-solid fa-wand-magic-sparkles"></i> AI Deep Analysis</h3>
+                    <div id="ai-summary-content" class="markdown-content"></div>
+                </div>
+                
+
+
+                <!-- Chat AI Embedded Panel -->
+                <div class="panel glass-panel ai-chat-widget">
+                    <h3><i class="fa-solid fa-robot"></i> Data Assistant Chat</h3>
+                    <div class="chat-body" id="chat-messages">
+                        <div class="message ai">Hello! Let's explore your data. I can give predictions, insights, or explain properties.</div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="chat-input" placeholder="Ask about trends, predictions, or quality..." disabled autocomplete="off">
+                        <button id="send-chat" disabled><i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                </div>
+
+                <!-- Chart Controls -->
+                <div class="panel glass-panel controls-panel">
+                     <h3><i class="fa-solid fa-sliders"></i> Visual Controls</h3>
+                     <div class="controls">
+                         <label>Type</label>
+                         <select id="chart-type-selector">
+                             <option value="bar">Bar Chart</option>
+                             <option value="line">Line Chart</option>
+                             <option value="pie">Pie Chart</option>
+                             <option value="doughnut">Doughnut Chart</option>
+                         </select>
+                         <label>X-Axis</label>
+                         <select id="x-axis-selector"></select>
+                         <label>Y-Axis</label>
+                         <select id="y-axis-selector"></select>
+                         <button id="add-chart-btn" class="btn-primary">Add Chart</button>
+                     </div>
+                </div>
+
+                <!-- Chart Grid Area (GridStack) -->
+                <div class="charts-area">
+                    <div class="grid-stack" id="grid"></div>
+                </div>
+            </div>
+            
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gridstack@7.2.1/dist/gridstack-all.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.css"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+</body>
+</html>
